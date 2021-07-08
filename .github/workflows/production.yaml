@@ -1,0 +1,40 @@
+name: production deploy to s3
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    name: build site and push to S3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Dependencies
+        run: npm i
+      - name: create website
+        run: npm run build
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_IDENTITY_REGION }}
+          role-to-assume: ${{ secrets.AWS_RANDD_MJSBX_ROLE }}
+          role-external-id: ${{ secrets.AWS_RANDD_MJSBX_EXTERNAL_ID }}
+          role-duration-seconds: 900
+          role-session-name: gigatech.pro-s3-bucket-update
+          role-skip-session-tagging: true
+      - name: Deploy to S3
+        uses: reggionick/s3-deploy@v3
+        with:
+          folder: dist
+          bucket: ${{ secrets.S3_MJSBX_GTPRO_GTPRO_BUCKET }}
+          bucket-region: ${{ secrets.S3_MJSBX_GTPRO_BUCKET_REGION }}
+          dist-id: ${{ secrets.CLOUDFRONT_MJSBX_DIST_ID }}
+          invalidation: /
+          delete-removed: true
+          no-cache: true
+          private: true

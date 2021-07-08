@@ -1,0 +1,21 @@
+{
+  "name": "sample-enrollment-app",
+  "version": "1.0.0",
+  "description": "Sample Enrollment App",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "standard --verbose",
+    "serve": "./node_modules/http-server/bin/http-server dist -p 8080 --cors",
+    "build-enrollment": "mkdir -p dist/enrollment && cp -R src/enrollment/* dist/enrollment",
+    "build": "npm run build-enrollment",
+    "dev": "./node_modules/http-server/bin/http-server src -p 8080 --cors"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "http-server": "^0.12.3",
+    "standard": "^16.0.3"
+  }
+}

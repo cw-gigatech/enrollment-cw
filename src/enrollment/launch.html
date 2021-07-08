@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>(EHR) - Enrollment</title>
+    <script src="https://cdn.jsdelivr.net/npm/fhirclient/build/fhir-client.js"></script>
+  </head>
+  <body>
+    <!-- This script is for launching within the EHR context. -->
+    <script>
+      try {
+        console.log("attempting FHIR AUTH");
+        FHIR.oauth2.authorize({
+          completeInTarget: true,
+          target: "_blank",
+
+          // The client_id that you should have obtained after registering a client at
+          // the EHR.
+          // The Epic Client id.
+          clientId: "cf2cb131-3920-4481-b39e-3df6bea6367a",
+
+          // The scopes that you request from the EHR. In this case we want to:
+          // launch            - Get the launch context
+          // openid & fhirUser - Get the current user
+          // patient/*.read    - Read patient data
+          scope:
+            "launch online_access openid profile fhirUser patient.read patient.search observation.read observation.search medicationrequest.read",
+
+          // Typically, if your redirectUri points to the root of the current directory
+          // (where the launchUri is), you can omit this option because the default value is
+          // ".". However, some servers do not support directory indexes so "." and "./"
+          // will not automatically map to the "index.html" file in that directory.
+          redirectUri: "https://dev.mj.gigatech.pro/enrollment/index.html",
+        });
+      } catch (e) {
+        console.log("FHIR AUTH Error!");
+        console.log(e);
+      }
+    </script>
+  </body>
+</html>
